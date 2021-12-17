@@ -1,0 +1,55 @@
+body {
+   font-family: arial
+}
+input:focus { outline: none }
+.tt-container {
+    font-size:14pt;
+/*    position:relative; */
+}
+#texttrain {
+    float:left;
+    display: inline;
+    width: 80%;
+    margin-top: 24px;
+    margin-left: 24pt;
+    padding: 24pt;
+    background: white;
+    font-size:14pt;
+/*    line-height:30px;*/
+}
+.inputcontainer {
+/*    height: 36px; */
+}
+.persistent-placeholder {
+    /*    color: black;*/
+    color:grey;
+/*    font-weight:bold; */
+   z-index: 0;
+/*   top: 0px; bottom: 0;
+   left: 0; right: 0; */
+   background-color: transparent;
+   border: none;
+/*   font-size: 14pt;*/
+   line-height: 52px; /* whyever two px less than free-typing */
+}
+.free-typing {
+  z-index: 1;
+  width: inherit;
+  background-color: transparent;
+  position: absolute;
+/*   top: 0px;  bottom: 0;
+   left: 0;  right: 0; */
+  border: none;
+  margin-top:-1px;
+  margin-left:-2px;
+  font-size:inherit;
+/*   font-size: 14pt;*/
+  line-height: 52px; 
+}
+
+select {
+    font-size:14pt
+}
+button {
+    font-size:14pt
+}
