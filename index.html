@@ -1,11 +1,9 @@
-
 <html>
   <head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="styles.css"></link>
-  </head>
+  <meta charset="UTF-8">
+</head>
   <body>
-    <div id="ht-door" >
+    <div id="ht-door">
       <select id="select-book">
 	<!-- cat extract/books.txt | awk '{ print "<option value=\"" $2 "|" $3 "\">" $2 "</option>" }' -->
 	<option value="genesis|50">genesis</option>
@@ -54,41 +52,8 @@
 	start
       </button>
     </div>
-
-    <div id="tt-container" style="display:none">
-      <div class="a88hkc" style="float:right; margin-top: 18pt" id="tt-help">help</div>
-      <br/>
-      <div id="texttrain">
-	<div id="tt-lang-b">
-	</div>
-	<div id="tt-lang-a" style="margin-top:2px">
-	  <span id="tt-input-done" style="vertical-align: top; line-height:52px;">
-	  </span>
-	  
-	  <span class="tt-move-with-input" style="display:inline-block">
-
-	    
-	    <!--<div class="inputcontainer" style="margin-top:30px">-->
-	      <div class="inputcontainer" style="">
-	      <input id="tt-input2" type="text" value="" class="free-typing"/>
-	      <span id="tt-placeholder" class="persistent-placeholder"></span>
-	    </div> <!-- inputcontainer -->
-	    <div id="tt-suggestions" style="position:absolute; margin-top:-11px">
-	    </div>
-
-	    
-	  </span> <!-- move-with-input -->
-	  
-	  <span class="inputcontainer" style="vertical-align:top">
-	    <span autocomplete="off" value="" class="persistent-placeholder" id="tt-rest-placeholder"></span>
-	  </span> <!-- inputcontainer -->
-	    
-	</div> <!-- flex wrap / langa -->
-	<div id="tt-lang-a-sentence"></div> <!-- not used -->
-      </div> <!-- texttrain -->
-    </div> <!-- container -->
-  </body>
-  <!--  <script src="isaiah-24-eng-heb.js"></script> -->
+</body>
+<!--  <script src="isaiah-24-eng-heb.js"></script> -->
   <script src="sentence-word-data.js"></script> 
   <script src="text-train.js"></script>
   <script src="files-joiner.js"></script>

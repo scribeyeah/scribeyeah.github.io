@@ -23,9 +23,13 @@ function FilesJoiner() {
 	var englishAll = self.English.split("\n")
 	var intAll = self.Interlinear.split("\n")
 
-	var bookChapterR = new RegExp("^" + book + " " + chapter)
-	var englishLines = englishAll.filter(line => { line.matches(bookChapterR) })
-	var intLines = intAll.filter(line => { line.matches(bookChapterR) })
+	var bookChapterR = new RegExp("^" + book + " " + chapter + ":")
+//	var bookChapterR = new RegExp("isaiah 24:")
+	var englishLines = englishAll.filter(line =>  line.match(bookChapterR) )
+	var intLines = intAll.filter(line => line.match(bookChapterR) )
+//	englishLines = englishAll[0..10]
+//	intLines = intAll[0..10]
+//	console.log(intLines.length)
 
 	// parse array
 	for (var i = 0; i < intLines.length; i++) {
@@ -39,10 +43,11 @@ function FilesJoiner() {
 	    var a = interlin.split("$")
 	    for (var p of a) {
 		var b = p.split("#")
+		if (b.length < 3) { continue }
 		var english = b[0]
 		var hebrew = b[2]
-		hebrew = hebrew.replace(/[^a-zA-Z]/, " ")
-		hebrew = hebrew.replace(/  +/, " ")
+		hebrew = hebrew.replaceAll(/[^a-zA-Z]/g, " ")
+		hebrew = hebrew.replaceAll(/  +/g, " ")
 		verse.wordPairs.push(new WordPair(english.trim(), hebrew.trim()))
 	    }
 	    sentences.push(verse)

@@ -1,0 +1,2 @@
+in the chapter tables, $6, the verse number field, ist broken. sometimes there's grammar in there, sometimes verse number.
+do we need a new extract?
