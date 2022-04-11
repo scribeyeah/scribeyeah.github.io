@@ -61,13 +61,15 @@ body {\
 <!-- <span id="tt-close" style="margin-left:auto; margin-right:0" class="material-icons-outlined" >close</span> --> \
 <div id="tt-lang-b">\
 </div>\
+<div id="tt-lang-a" style="">\
+</div>\
 <div style="display:flex"> <!-- flex wrap -->\
 <span id="tt-input-done" style="vertical-align: top; line-height: 36px; display:inline-block; white-space:pre">\
 </span>\
 <div class="tt-move-with-input" style="display:inline-block; flex-grow:1"> \
 <div class="inputcontainer">\
   <input id="tt-input2" type="text" value="" class="free-typing"></input>\
-  <input autocomplete="off" value="Oracul, tell me" id="persistent-placeholder"/>\
+  <input autocomplete="off" value="" id="persistent-placeholder"/>\
 </div> <!-- inputcontainer -->\
 <!--<input id="tt-input" oninput="this.style.width=this.value.length+\'ch\'" style="border: 1px solid red; font-size:14pt" autofocus> -->\
 </input>\
@@ -75,8 +77,6 @@ body {\
 </div>\
 </div> <!-- move-with-input -->\
 </div> <!-- flex wrap --> \
-<div id="tt-lang-a" style="float:left">\
-</div>\
 </div>'
 
     var displayMode = 1 // 0: whole sentence printed, type in middle, 1: whole sentence as placeholder
@@ -98,7 +98,7 @@ body {\
 
     // ui final touches
     inputE.focus()
-    startTranslateWait()
+//    startTranslateWait()
 
     // TODO clearer error handling?
     kickOff()
@@ -264,39 +264,39 @@ body {\
 	
 	//	langBSentenceE.innerText = langB
 	langBSentenceE.innerHTML = langB
-	switch (displayMode) {
+	langASentenceE.innerHTML = langA
+	
+/*	switch (displayMode) {
 	case 0:
 	    langASentenceE.innerText = langA
 	case 1:
 	    placeholderE.value = langA
-	}
+	} */
     }
 
     // use the whole word pool
-/*    function generateSuggestions() {
+    function generateSuggestions() {
 	if (!sentences[trainSentenceIndex]) { // not so cool, but at least avoid crash when current sentence is undefined?
 	    return ""
 	}
 
 	var string = ""
 	// three next
-	var words = sentences[trainSentenceIndex].words
-	//	for(var n = 0; n < 3 && wordIndex + n < words.length; n++) { // three suggestions
-	for(var n = 0; n < 1 && wordIndex + n < words.length; n++) { // one suggestion
-	    if (swd.wordDict[words[wordIndex+n]]) {
-		// add langB
-		var langB = swd.wordDict[words[wordIndex+n]]
-		string += translit(langB) + " "
-	    }
+	var wordPairs = sentences[trainSentenceIndex].wordPairs
+	for(var n = 0; n < 3 && wordIndex + n < wordPairs.length; n++) { // three suggestions
+
+	    // add langB
+	    var langB = wordPairs[wordIndex+n].English
+	    string += langB + " "
+
 	    // add langA
-	    var langA = words[wordIndex+n]
-	    string += wordTranslitForUser(langA) + "<br/>"
+	    var langA = wordPairs[wordIndex+n].Hebrew
+	    string += langA + "<br/>"
+
 	}
 	return string
 
-	// simple
-	//    return target[1] + " " + target[0] + "<br/>"
-    } */
+    } 
 
     // for single word s, remove blanks between syllables, e.g. chinese
 /*    function wordTranslitForUser(s) {
@@ -312,8 +312,9 @@ body {\
 //	console.log("start translate wait")
 	// show wait message
 	//	inputE.placeholder = "translating words..."
-	placeholderE.value = "translating words..."
+//	placeholderE.value = "translating words..."
     }
+    
     function stopTranslateWait() {
 	// hide wait message
 	//	inputE.placeholder = ""
@@ -345,8 +346,9 @@ body {\
 	// inputE.placeholder = train[trainSentenceIndex].wordPairs[wordIndex][1]
 
 	// below
-//	suggestionsE.innerHTML = generateSuggestions()
+	suggestionsE.innerHTML = generateSuggestions()
 
+	/*
 	// try out: placeholder
 
 	if (!sentences[trainSentenceIndex]) { // not so cool, but at least avoid crash when current sentence is undefined?
@@ -369,7 +371,7 @@ body {\
 	    break
 	case 1:
 	    suggestionsE.textContent = langB
-	}
+	} */
     }
 
     // remove diacritics in string s

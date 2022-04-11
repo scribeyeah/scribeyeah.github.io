@@ -1,0 +1,67 @@
+
+<html>
+  <head>
+  <meta charset="UTF-8">
+</head>
+  <body>
+    <div id="ht-door">
+      <select id="select-book">
+	<!-- cat extract/books.txt | awk '{ print "<option value=\"" $2 "|" $3 "\">" $2 "</option>" }' -->
+	<option value="genesis|50">genesis</option>
+	<option value="exodus|40">exodus</option>
+	<option value="leviticus|27">leviticus</option>
+	<option value="numbers|36">numbers</option>
+	<option value="deuteronomy|34">deuteronomy</option>
+	<option value="joshua|24">joshua</option>
+	<option value="judges|21">judges</option>
+	<option value="1_samuel|31">1_samuel</option>
+	<option value="2_samuel|24">2_samuel</option>
+	<option value="1_kings|22">1_kings</option>
+	<option value="2_kings|25">2_kings</option>
+	<option value="isaiah|66">isaiah</option>
+	<option value="jeremiah|52">jeremiah</option>
+	<option value="ezekiel|48">ezekiel</option>
+	<option value="hosea|14">hosea</option>
+	<option value="joel|3">joel</option>
+	<option value="amos|9">amos</option>
+	<option value="obadiah|1">obadiah</option>
+	<option value="jonah|4">jonah</option>
+	<option value="micah|7">micah</option>
+	<option value="nahum|3">nahum</option>
+	<option value="habakkuk|3">habakkuk</option>
+	<option value="zephaniah|3">zephaniah</option>
+	<option value="haggai|2">haggai</option>
+	<option value="zechariah|14">zechariah</option>
+	<option value="malachi|3">malachi</option>
+	<option value="psalms|150">psalms</option>
+	<option value="proverbs|31">proverbs</option>
+	<option value="job|42">job</option>
+	<option value="songs|8">songs</option>
+	<option value="ruth|4">ruth</option>
+	<option value="lamentations|5">lamentations</option>
+	<option value="ecclesiastes|12">ecclesiastes</option>
+	<option value="esther|10">esther</option>
+	<option value="daniel|12">daniel</option>
+	<option value="ezra|10">ezra</option>
+	<option value="nehemiah|13">nehemiah</option>
+	<option value="1_chronicles|29">1_chronicles</option>
+	<option value="2_chronicles|36">2_chronicles</option>
+      </select>
+      <select id="select-chapter">
+      </select>
+      <button id="button-start">
+	start
+      </button>
+    </div>
+</body>
+<!--  <script src="isaiah-24-eng-heb.js"></script> -->
+  <script src="sentence-word-data.js"></script> 
+  <script src="text-train.js"></script>
+  <script src="files-joiner.js"></script>
+  <script src="main.js"></script>
+  <script>
+    //    new TextTrain()
+//    console.log(["a","b","c"].filter(e => e == "a"))
+  </script>
+
+</html>

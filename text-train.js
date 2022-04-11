@@ -1,11 +1,88 @@
+var hebLat = {
+    "א": "a",
+"ב": "b",
+"ג": "g",
+"ד": "d",
+"ה": "h",
+"ו": "o",
+"ז": "c",
+"ח": "H",
+"ט": "T",
+"י": "i",
+"כ": "k",
+"ל": "l",
+"מ": "m",
+"נ": "n",
+"ס": "s",
+"ע": "e",
+"פ": "p",
+"צ": "z",
+"ק": "q",
+"ר": "r",
+"ש": "S",
+    "ת": "t"
+}
+
+var latHeb = {
+    "a": "א",
+"b": "ב",
+"g": "ג",
+"d": "ד",
+"h": "ה",
+"o": "ו",
+"c": "ז",
+"H": "ח",
+"T": "ט",
+"i": "י",
+"k": "כ",
+"l": "ל",
+"m": "מ",
+"n": "נ",
+"s": "ס",
+"e": "ע",
+"p": "פ",
+"z": "צ",
+"q": "ק",
+"r": "ר",
+"S": "ש",
+    "t": "ת"
+}
+
+// hebToLat transliterates a hebrew string to latin letters
+function hebToLat(s) {
+    return tlit(s, hebLat)
+}
+
+// latToHeb translits s from latin to hebrew characters
+function latToHeb(s) {
+    return tlit(s, latHeb)
+}
+
+// tlit translits s using table. table is latHeb or hebLat
+function tlit(s, table) {
+    var out = ""
+    for (var i = 0; i < s.length; i++) {
+	var c = s.charAt(i)
+	if (table[c]) {
+	    out += table[c]
+	} else {
+	    out += c
+	}
+    }
+    return out
+}
+    
+
 // ui and translate kickoff, started by main.js 
 
 function TextTrain(sentences) { 
 
+    var useHeb = false // type in hebrew or latin
+    
     var trainSentenceIndex = 0
     var wordIndex = 0
 
-    var clearInputOnInput = false
+//    var clearInputOnInput = false
 
     var suggestionsE
     var langASentenceE
@@ -19,7 +96,7 @@ function TextTrain(sentences) {
     doorUI.style.display = "none"
 
     // ui
-    var html = '<style> input:focus { outline: none } \
+    var html = `<style> input:focus { outline: none }\
 body {\
    font-family: arial\
 }\
@@ -40,7 +117,7 @@ body {\
    background-color: transparent;\
    border: none;\
    font-size: 14pt;\
-   line-height: 34px; /* whyever two px less than free-typing */ \
+   line-height: 34px;\
 }\
 .free-typing {\
   z-index: 1;\
@@ -59,6 +136,7 @@ body {\
 <div id="texttrain" style="float:left; display: inline; width: 80%; margin-top: 24px; margin-left: 24pt; padding: 24pt; background: white;">\
 <!-- <div style="font-size:8pt; color:gray; position relative; top:-60px" id="tt-help">help</div>-->\
 <!-- <span id="tt-close" style="margin-left:auto; margin-right:0" class="material-icons-outlined" >close</span> --> \
+<button id="tt-lat-heb" style="float:right"></button>
 <div id="tt-lang-b">\
 </div>\
 <div id="tt-lang-a" style="">\
@@ -77,7 +155,7 @@ body {\
 </div>\
 </div> <!-- move-with-input -->\
 </div> <!-- flex wrap --> \
-</div>'
+</div>`
 
     var displayMode = 1 // 0: whole sentence printed, type in middle, 1: whole sentence as placeholder
 
@@ -87,6 +165,7 @@ body {\
     //    document.querySelectorAll(".WFnNle")[0].appendChild(container)
     document.body.appendChild(container)
 
+    latHebSwitchE = document.getElementById("tt-lat-heb")
     inputE = document.getElementById("tt-input2")
     placeholderE = document.getElementById("persistent-placeholder")
     inputDoneE = document.getElementById("tt-input-done")
@@ -105,7 +184,35 @@ body {\
 /*    if(!kickOff()) {
 //	alert("Paste text to the translate field, and click 'Start Text Train' again")
 	return
-    }  */
+	}  */
+
+    setLatHeb()
+    
+    latHebSwitchE.addEventListener("click", function() {
+	useHeb = !useHeb
+	setLatHeb()
+	// don't clear inputDone on updateTrainSentence
+
+	updateTrainSentence()
+	
+/*	var tmp = inputDoneE.innerHTML
+	if (useHeb) {
+	    inputDoneE.innerHTML = latToHeb(tmp)
+	} else {
+	    inputDoneE.innerHTML = hebToLat(tmp)
+	} */
+	updateSuggestions()
+    })
+
+    // setLatHeb updates ui alphabet-switch-button
+    function setLatHeb() {
+	if (!useHeb) {
+	    latHebSwitchE.innerText = "א"
+	} else {
+	    latHebSwitchE.innerText = "A"
+	}
+    }
+				   
 
 
 
@@ -152,7 +259,9 @@ body {\
 //	swd.FillWithChapterString()
 
 	// hacky, maybe on file loaded etc
-	nextSentenceTranslated()
+	updateTrainSentence()
+	updateSuggestions()
+
 	
 /*	if (swd.SentenceN > 0) {
 	    //            swd.onSentenceTranslated = nextSentenceTranslated
@@ -170,15 +279,20 @@ body {\
 	var wps = sentences[trainSentenceIndex].wordPairs
         // input does not match source
         var userIn = inputE.value.trim()
+	// in case the user enters hebrew characters
+	userIn = hebToLat(userIn)
+
 	//        var check = wordTranslitForUser(wps[wordIndex].Hebrew)
 	var check = wps[wordIndex].Hebrew
+
         if (userIn !== check && clearNonLetters(userIn) != clearNonLetters(check)) {
-//            console.log("input '"+userIn+"' does not match source '"+check+"'")
+	    //            console.log("input '"+userIn+"' does not match source '"+check+"'")
             return
         }
 
         // input matches, continue with...
         if (wordIndex < wps.length - 1) {     // ...next word
+	    if (useHeb) { check = latToHeb(check) }
             inputDoneE.innerHTML +=  check + " "
             wordIndex++
             inputE.value = ""
@@ -224,7 +338,9 @@ body {\
 	wordIndex = 0
 	trainSentenceIndex ++
 
+	clearInput()
 	updateTrainSentence()
+	
 	// translation not yet available
 /*	if (trainSentenceIndex > sentences.length - 1) {
 //            console.log("translation not yet there")
@@ -240,9 +356,9 @@ body {\
 	var sentence = sentences[trainSentenceIndex]
 
 //	stopTranslateWait()
-	inputDoneE.innerText = ""
+
 	// remember to hide langA and keep langB
-	clearInputOnInput = true
+//	clearInputOnInput = true
 
 	if (!sentence) {
             console.log("error no sentence")
@@ -262,9 +378,13 @@ body {\
 //	langB += "<br/>hineh yhvh boqeq ha’arets ubolqah ve‘ivah faneha veheifits yoshebeha."
 //	langB = translit(sentence.english) // maybe todo: same for langB as for langA?
 	
-	//	langBSentenceE.innerText = langB
 	langBSentenceE.innerHTML = langB
-	langASentenceE.innerHTML = langA
+	// display hebrew either in hebrew or latin letters
+	if (!useHeb) {
+	    langASentenceE.innerHTML = langA
+	} else {
+	    langASentenceE.innerHTML = latToHeb(langA)
+	}
 	
 /*	switch (displayMode) {
 	case 0:
@@ -272,6 +392,11 @@ body {\
 	case 1:
 	    placeholderE.value = langA
 	} */
+    }
+
+    // clearInput clears the entered input for next sentence
+    function clearInput() {
+	inputDoneE.innerText = ""
     }
 
     // use the whole word pool
@@ -291,6 +416,9 @@ body {\
 
 	    // add langA
 	    var langA = wordPairs[wordIndex+n].Hebrew
+	    if (useHeb) {
+		langA = latToHeb(langA)
+	    }
 	    string += langA + "<br/>"
 
 	}
@@ -322,7 +450,7 @@ body {\
     }
 
     // if translation
-    function nextSentenceTranslated() {
+/*    function nextSentenceTranslated() {
 //	stopTranslateWait()
 
 	updateTrainSentence()
@@ -330,7 +458,7 @@ body {\
 
 	// remove listener
 //	swd.onSentenceTranslated = null
-    } 
+    } */
 
     // in-place shuffle
     function shuffle(array) {
