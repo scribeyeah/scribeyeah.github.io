@@ -75,7 +75,7 @@ function tlit(s, table) {
 
 // ui and translate kickoff, started by main.js 
 
-function TextTrain(sentences) { 
+function TextTrain(bible, sentences) { 
 
     var useHeb = false // type in hebrew or latin
     
@@ -166,6 +166,7 @@ body {\
     document.body.appendChild(container)
 
     latHebSwitchE = document.getElementById("tt-lat-heb")
+//    if (bible != "tnk") { latHebSwitchE.style.display == "none" }
     inputE = document.getElementById("tt-input2")
     placeholderE = document.getElementById("persistent-placeholder")
     inputDoneE = document.getElementById("tt-input-done")
@@ -207,14 +208,15 @@ body {\
     // setLatHeb updates ui alphabet-switch-button
     function setLatHeb() {
 	if (!useHeb) {
-	    latHebSwitchE.innerText = "א"
+	    if (bible == "tnk") {
+		latHebSwitchE.innerText = "א"
+	    } else if (bible == "apg") {
+		latHebSwitchE.innerText = "α"
+	    }
 	} else {
 	    latHebSwitchE.innerText = "A"
 	}
     }
-				   
-
-
 
     inputE.addEventListener("input", function() {
 	var s = inputE.value
@@ -249,7 +251,7 @@ body {\
     })
 
     helpE.addEventListener("click", function() {
-	alert("Retype the second sentence. \n Keyboard shortcuts: \n tab - skip sentence \n escape - quit")
+	alert("Retype the second sentence. \n Keyboard shortcuts: \n tab - skip sentence \n escape - quit \n")
     })
 
     // kickOff starts the data retrieving
@@ -284,9 +286,13 @@ body {\
 
 	//        var check = wordTranslitForUser(wps[wordIndex].Hebrew)
 	var check = wps[wordIndex].Hebrew
+	if (bible == "apg" && useHeb == false) {
+	    check = translit(check)
+	}
+	console.log(userIn + " " + check)
 
-        if (userIn !== check && clearNonLetters(userIn) != clearNonLetters(check)) {
-	    //            console.log("input '"+userIn+"' does not match source '"+check+"'")
+        if (userIn !== check && clearNonLetters(userIn) != clearNonLetters(check) && clearNonLetters(clearDiacritics(check)) != clearNonLetters(clearDiacritics(userIn))) {
+	    // input not matching, return
             return
         }
 
@@ -354,6 +360,7 @@ body {\
     // update the query sentence
     function updateTrainSentence() {
 	var sentence = sentences[trainSentenceIndex]
+	console.log("sentence: " + sentence.wordPairs[0])
 
 //	stopTranslateWait()
 
@@ -370,6 +377,7 @@ body {\
 	var langA = ""
 	for (var w of sentence.wordPairs) {
 	    //            langA += wordTranslitForUser(w.Hebrew) + " "
+	    console.log("langA: " + w.Hebrew)
 	    langA += w.Hebrew + " "
 	}
 
@@ -384,6 +392,9 @@ body {\
 	    langASentenceE.innerHTML = langA
 	} else {
 	    langASentenceE.innerHTML = latToHeb(langA)
+	}
+	if (bible == "apg" && useHeb == false) {
+	    langASentenceE.innerHTML = translit(langA)
 	}
 	
 /*	switch (displayMode) {
@@ -412,10 +423,14 @@ body {\
 
 	    // add langB
 	    var langB = wordPairs[wordIndex+n].English
+	    langB = langB.replace(/[\[\]0-9]+/g, "").trim()
 	    string += langB + " "
 
 	    // add langA
 	    var langA = wordPairs[wordIndex+n].Hebrew
+	    if (bible == "apg" && useHeb == false) {
+		langA = translit(langA)
+	    }
 	    if (useHeb) {
 		langA = latToHeb(langA)
 	    }
@@ -433,6 +448,10 @@ body {\
 
     // remove trailing
     function clearNonLetters(s) {
+/*	if (bible == "apg") { // translit greek seems to have invisible letters
+	    // a bit hacky, change?
+	    return s.replace(/[^a-zA-Z]/, "")
+	}*/
 	return s.replace(/\P{Letter}/ug, "")
     }
 
@@ -512,3 +531,28 @@ body {\
 	console.log("input " + text)
     }
 }
+/*
+// clearDiacriticKeepH removes diacritics, keeps the greek h
+function clearDiacriticsKeepH() {
+    oldTextContent =  oldTextContent.normalize("NFD")
+    newTextContent = "";
+    for(c of oldTextContent) {
+	// replace every diacritic except greek h
+	if (!c.match(/\p{Diacritic}/ug) || c.match(/\u0314/ug)) {
+	    newTextContent += c;
+	}
+    }
+}
+
+// clearDiacritics removes all diacritics
+function clearDiacritics() {
+    oldTextContent =  oldTextContent.normalize("NFD")
+    newTextContent = "";
+    for(c of oldTextContent) {
+	// replace every diacritic
+	if (!c.match(/\p{Diacritic}/ug)) {
+	    newTextContent += c;
+	}
+    }
+}
+*/

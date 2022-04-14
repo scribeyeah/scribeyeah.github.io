@@ -3,17 +3,24 @@
 
 var filesJoiner = new FilesJoiner
 
- fetch('https://phrase-to-phrase.github.io/hebrew-train/english-douay-rheims-bible.txt')
+fetch('https://phrase-to-phrase.github.io/hebrew-train/english-douay-rheims-bible.txt')
     .then(response => response.text())
     .then(text => {
 	filesJoiner.English = text
 	console.log("douay-rheims fetched")
     })
+// both hebrew and greek are fetched, though we only need one. fetch after bible selection?
 fetch('https://phrase-to-phrase.github.io/hebrew-train/tnk-interlinear-tlit.txt')
     .then(response => response.text())
     .then(text => {
-	filesJoiner.Interlinear = text
+	filesJoiner.TNKInterlinear = text
+    })
+fetch('https://phrase-to-phrase.github.io/hebrew-train/apg-interlinear.txt')
+    .then(response => response.text())
+    .then(text => {
+	filesJoiner.APGInterlinear = text
 	}) 
+
 fetch('https://phrase-to-phrase.github.io/hebrew-train/shalom.txt')
     .then(response => response.text())
     .then(text => {
@@ -27,6 +34,7 @@ fetch('https://phrase-to-phrase.github.io/hebrew-train/shalom.txt')
 	var c = b[0].split(" ")
 	var book = c[0]
 	var d = c[ */
+var bibleSelect = document.getElementById("select-bible")
 var bookSelect = document.getElementById("select-book")
 var chapterSelect = document.getElementById("select-chapter")
 
@@ -67,10 +75,10 @@ startButton.addEventListener("click", function() {
     var a = bookSelect.value.split("|")
     var book = a[0]
     var chapter = (chapterSelect.value ? chapterSelect.value : 1)
-    var sentences = filesJoiner.GetSentences(book, chapter)
+    var bible = bibleSelect.value
+    var sentences = filesJoiner.GetSentences(bible, book, chapter)
 //    var sentences = filesJoiner.GetSentences(bookSelect.options[bookSelect.selectedIndex].text, 1)
-    console.log("sentences length:" + sentences.length)
-    new TextTrain(sentences)
+    //    console.log("sentences length:" + sentences.length)
+    console.log("bible: "+bible)
+    new TextTrain(bible, sentences)
 })
-
-

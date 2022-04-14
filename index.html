@@ -1,9 +1,14 @@
+
 <html>
   <head>
   <meta charset="UTF-8">
 </head>
   <body>
     <div id="ht-door">
+      <select id="select-bible">
+	<option value="tnk">hebrew tanach</option>
+	<option value="apg">greek septuagint</option>
+      </select>
       <select id="select-book">
 	<!-- cat extract/books.txt | awk '{ print "<option value=\"" $2 "|" $3 "\">" $2 "</option>" }' -->
 	<option value="genesis|50">genesis</option>
@@ -53,7 +58,12 @@
       </button>
     </div>
 </body>
-<!--  <script src="isaiah-24-eng-heb.js"></script> -->
+  <!--  <script src="isaiah-24-eng-heb.js"></script> -->
+  <script src="testa.js"></script>
+  <script src="testb.js"></script>
+  <script src="tlit/kanjidict.js"></script>
+  <script src="tlit/unicode-tlit-array.js"></script>
+  <script src="tlit/translit.js"></script>
   <script src="sentence-word-data.js"></script> 
   <script src="text-train.js"></script>
   <script src="files-joiner.js"></script>
